@@ -48,7 +48,7 @@ class TagSearchFormView(FormView):
 
         # Get all images
         images = list(self.conn.getObjects("Image"))
-        logger.info("image count: %s" % len(images))
+        # logger.info("image count: %s" % len(images))
 
         # TODO If there are huge number of tags and images, could look at
         # avoiding duplication temporarily by using a generator. Probably if
@@ -59,26 +59,44 @@ class TagSearchFormView(FormView):
         # Get tags in those images
         for image in images:
 
-            time1 = time.time()
+            
 
-            logger.info("Processing image: '%s'" % image.getName())
+            print('Processing image: %s' % image.getName())
+            # logger.info("Processing image: '%s'" % image.getName())
 
             # Turn only the TagAnnotations into a set
             tag_ids_in_image = set([])
-            for tag in image.listAnnotations():
+            # time1a = time.time()
+            # AFTER HERE
+            time1 = time.time()
+            tagsX = image.listAnnotations()
+            print('0:   %0.3f ms' % ((time.time()-time1)*1000.0))
+
+            for tag in tagsX:
+                print('1:   %0.3f ms' % ((time.time()-time1)*1000.0))
                 if isinstance(tag, TagAnnotationWrapper):
+                    # print('2:   %0.3f ms' % ((time.time()-time1)*1000.0))
                     tag_ids_in_image.add(tag.getId())
+                    # print('3:   %0.3f ms' % ((time.time()-time1)*1000.0))
                     tags.add((tag.getId(), tag.getValue()))
+                    # print('4:   %0.3f ms' % ((time.time()-time1)*1000.0))
             time2 = time.time()
+
+            # BEFORE HERE
+            # time2 -> time3 is tiny, so time1 -> time2 is all the time
+
             # For each item in the set, append all the other items to it's entry
             for tag_id in tag_ids_in_image:
                 # Add the other tags to the set of intersections for this tag
                 self.tag_intersections.setdefault(tag_id, set([])).update(
                     tag_ids_in_image.symmetric_difference([tag_id]))
 
-            time3 = time.time()
-            logger.info('intermediate:   %0.3f ms' % ((time2-time1)*1000.0))
-            logger.info('processing took %0.3f ms' % ((time3-time1)*1000.0))
+            # time3 = time.time()
+            # logger.info('intermediate:   %0.3f ms' % ((time2-time1)*1000.0))
+            # logger.info('processing took %0.3f ms' % ((time3-time1)*1000.0))
+            # logger.info('time1a %0.3f ms' % ((time1a-time1)*1000.0))
+            print('total: %0.3f ms' % ((time2-time1)*1000.0))
+            # print('time1a %0.3f ms' % ((time1a-time1)*1000.0))
 
         # Get tags
         # tags = list(self.conn.getObjects("TagAnnotation"))
