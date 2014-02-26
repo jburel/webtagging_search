@@ -77,8 +77,8 @@ class TagSearchFormView(FormView):
                     tag_ids_in_image.symmetric_difference([tag_id]))
 
             time3 = time.time()
-            print '%s intermediate:   %0.3f ms' % (f.func_name, (time2-time1)*1000.0)
-            print '%s processing took %0.3f ms' % (f.func_name, (time3-time1)*1000.0)
+            print 'intermediate:   %0.3f ms' % ((time2-time1)*1000.0)
+            print 'processing took %0.3f ms' % ((time3-time1)*1000.0)
 
         # Get tags
         # tags = list(self.conn.getObjects("TagAnnotation"))
