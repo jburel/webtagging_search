@@ -43,6 +43,7 @@ class TagSearchFormView(FormView):
 
         # Get all images
         images = list(self.conn.getObjects("Image"))
+        print('image count: ', len(images))
 
         # TODO If there are huge number of tags and images, could look at
         # avoiding duplication temporarily by using a generator. Probably if
@@ -52,6 +53,7 @@ class TagSearchFormView(FormView):
 
         # Get tags in those images
         for image in images:
+            print('Processing image', image.getName())
             # Turn only the TagAnnotations into a set
             tag_ids_in_image = set([])
             for tag in image.listAnnotations():
