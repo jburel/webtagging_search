@@ -14,6 +14,8 @@ from omero.rtypes import rlong, rlist
 from .forms import TagSearchForm
 
 import logging
+import time
+
 logger = logging.getLogger(__name__)
 
 class TagSearchFormView(FormView):
@@ -56,6 +58,9 @@ class TagSearchFormView(FormView):
 
         # Get tags in those images
         for image in images:
+
+            time1 = time.time()
+
             logger.info("Processing image: '%s'" % image.getName())
 
             # Turn only the TagAnnotations into a set
@@ -69,6 +74,9 @@ class TagSearchFormView(FormView):
                 # Add the other tags to the set of intersections for this tag
                 self.tag_intersections.setdefault(tag_id, set([])).update(
                     tag_ids_in_image.symmetric_difference([tag_id]))
+
+            time2 = time.time()
+            print '%s processing took %0.3f ms' % (f.func_name, (time2-time1)*1000.0)
 
         # Get tags
         # tags = list(self.conn.getObjects("TagAnnotation"))
