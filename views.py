@@ -69,14 +69,16 @@ class TagSearchFormView(FormView):
                 if isinstance(tag, TagAnnotationWrapper):
                     tag_ids_in_image.add(tag.getId())
                     tags.add((tag.getId(), tag.getValue()))
+            time2 = time.time()
             # For each item in the set, append all the other items to it's entry
             for tag_id in tag_ids_in_image:
                 # Add the other tags to the set of intersections for this tag
                 self.tag_intersections.setdefault(tag_id, set([])).update(
                     tag_ids_in_image.symmetric_difference([tag_id]))
 
-            time2 = time.time()
-            print '%s processing took %0.3f ms' % (f.func_name, (time2-time1)*1000.0)
+            time3 = time.time()
+            print '%s intermediate:   %0.3f ms' % (f.func_name, (time2-time1)*1000.0)
+            print '%s processing took %0.3f ms' % (f.func_name, (time3-time1)*1000.0)
 
         # Get tags
         # tags = list(self.conn.getObjects("TagAnnotation"))
