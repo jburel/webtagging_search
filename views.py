@@ -13,6 +13,8 @@ from omero.rtypes import rlong, rlist
 
 from .forms import TagSearchForm
 
+import logging
+logger = logging.getLogger(__name__)
 
 class TagSearchFormView(FormView):
     """
@@ -39,12 +41,12 @@ class TagSearchFormView(FormView):
 
 
     def get_form_kwargs(self):
-        print('get_form_kwargs')
+        logger.info("get_form_kwargs")
         kwargs = super(TagSearchFormView, self).get_form_kwargs()
 
         # Get all images
         images = list(self.conn.getObjects("Image"))
-        print('image count: ', len(images))
+        logger.info("image count: %s" % len(images))
 
         # TODO If there are huge number of tags and images, could look at
         # avoiding duplication temporarily by using a generator. Probably if
@@ -54,7 +56,8 @@ class TagSearchFormView(FormView):
 
         # Get tags in those images
         for image in images:
-            print('Processing image', image.getName())
+            logger.info("Processing image: '%s'" % image.getName())
+
             # Turn only the TagAnnotations into a set
             tag_ids_in_image = set([])
             for tag in image.listAnnotations():
