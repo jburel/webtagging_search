@@ -39,7 +39,8 @@
         // Hide any options which do not intersect with the resulting selectTags set
         var doNotHide = tagIntersections[params.selected];
         // Don't hide the item that was just selected either
-        doNotHide.push(parseInt(params.selected))
+        doNotHide.push(parseInt(params.selected));
+        console.log(doNotHide);
 
         // Find any options not in the doNotHide list and hide them
         $("#id_selectedTags option").each(function(){
